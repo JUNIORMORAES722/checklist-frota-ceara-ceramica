@@ -9,24 +9,24 @@
   ],
   "routes": [
     {
-      "src": "/gestores/(.*)",
-      "dest": "https://frota-ceara-backend.onrender.com/gestores/$1"
+      "src": "/gestores(/.*)?",
+      "dest": "https://frota-ceara-backend.onrender.com/gestores$1"
     },
     {
-      "src": "/motoristas/(.*)",
-      "dest": "https://frota-ceara-backend.onrender.com/motoristas/$1"
+      "src": "/motoristas(/.*)?",
+      "dest": "https://frota-ceara-backend.onrender.com/motoristas$1"
     },
     {
-      "src": "/veiculos/(.*)",
-      "dest": "https://frota-ceara-backend.onrender.com/veiculos/$1"
+      "src": "/veiculos(/.*)?",
+      "dest": "https://frota-ceara-backend.onrender.com/veiculos$1"
     },
     {
-      "src": "/checklists/(.*)",
-      "dest": "https://frota-ceara-backend.onrender.com/checklists/$1"
+      "src": "/checklists(/.*)?",
+      "dest": "https://frota-ceara-backend.onrender.com/checklists$1"
     },
     {
-      "src": "/pendencias/(.*)",
-      "dest": "https://frota-ceara-backend.onrender.com/pendencias/$1"
+      "src": "/pendencias(/.*)?",
+      "dest": "https://frota-ceara-backend.onrender.com/pendencias$1"
     },
     {
       "src": "/eu",
