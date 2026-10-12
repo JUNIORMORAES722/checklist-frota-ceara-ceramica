@@ -2,14 +2,14 @@
 (function () {
   if (typeof window === 'undefined') return;
 
-  // URL fixa do backend no Render:
-  window.__API_URL__ = 'https://frota-ceara-backend.onrender.com';
+  // Em branco usa o proxy da Vercel (mesma origem, zero problemas de CORS ou bloqueio de navegador):
+  window.__API_URL__ = '';
 
   window.obterApiUrl = function () {
-    return window.__API_URL__;
+    return window.__API_URL__ || '';
   };
 
   window.definirApiUrl = function (url) {
-    if (url) window.__API_URL__ = String(url).trim().replace(/\/+$/, '');
+    window.__API_URL__ = url ? String(url).trim().replace(/\/+$/, '') : '';
   };
 })();
