@@ -111,6 +111,26 @@ npm run restaurar -- --origem backups\NOME-DA-PASTA --banco data\restaurado.sqli
 
 No Agendador de Tarefas do Windows, crie uma tarefa diária cujo programa seja `node` e os argumentos `scripts/backup.js`, iniciando na pasta do projeto. O agendamento em si fica no sistema operacional.
 
+## Vercel e Neon
+
+O computador de desenvolvimento continua no SQLite quando `DATABASE_URL` está ausente. Não coloque essa variável no `.env` local se a operação ainda deve usar `data/frota.sqlite`. Na Vercel, `DATABASE_URL` é obrigatória: o sistema recusa subir só com SQLite, porque o disco da função não guarda os registros.
+
+O PostgreSQL usa as mesmas tabelas e os mesmos identificadores de texto. Ativo e quilometragem inconsistente continuam como inteiros `0` ou `1`. As datas continuam em texto. `usuario_id` não vira chave estrangeira, para não descartar inspeção antiga sem usuário. A fotografia de produção fica na coluna `foto_conteudo`, não em arquivo, porque a Vercel não tem disco persistente. No SQLite local, a fotografia continua em arquivo.
+
+As migrações não rodam na inicialização e não apagam dados. Ainda não há banco Neon ligado por este repositório. Nada abaixo deve ser executado contra produção sem autorização.
+
+1. Crie ou escolha um projeto PostgreSQL no Neon. Não é preciso colar a URL neste chat.
+2. No painel do Neon, abra Connect e copie a connection string **pooled**, a indicada para aplicações serverless. O host costuma conter `-pooler`.
+3. Na Vercel, importe o repositório GitHub `JUNIORMORAES722/checklist-frota-ceara-ceramica`. O arquivo de entrada é `server.js`, que exporta o Express sem chamar `listen` dentro da função. A pasta `public/` é o site estático.
+4. Em Settings, Environment Variables, cadastre `DATABASE_URL` e `JWT_SECRET` separados para Preview e Production. Gere um segredo novo em cada ambiente, com pelo menos 32 caracteres, diferente do exemplo e do segredo local. Não reutilize o `.env` desta máquina.
+5. Faça primeiro um deploy de Preview, ainda sem dados reais.
+6. No ambiente em que o esquema deve nascer, execute `npm run migrar:esquema` com `DATABASE_URL` definido só naquele ambiente. O comando cria tabelas ausentes e registra a versão. Não crie usuários fictícios em produção.
+7. Confira login, checklist, veículo, pendência e uma nova implantação. Os registros precisam continuar depois do restart. Só então autorize a cópia dos dados reais.
+
+A cópia dos dados reais fica em `npm run migrar:neon -- --origem CAMINHO-DA-COPIA --fotos CAMINHO-DAS-FOTOS`. O script não abre `data/frota.sqlite`. Ele exige uma cópia, compara as contagens e não grava se o destino já tiver dados inesperados. Uma nova tentativa, sem duplicar o que já entrou, usa `--retomar`. O relatório precisa mostrar os mesmos totais na origem e no destino. A conferência conhecida desta base é 3 usuários, 6 veículos, 10 checklists e 8 pendências; esses números não são inseridos pelo script. Se `confereComReferencia` vier falso, pare e revise antes de usar esse banco.
+
+O backup do Neon fica no próprio Neon. `npm run backup` continua sendo o backup do SQLite local.
+
 ## Limitações
 
 - O processo Node não termina TLS. Fora da máquina local, o acesso depende do proxy descrito acima.

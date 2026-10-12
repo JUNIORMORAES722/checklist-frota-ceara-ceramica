@@ -2,17 +2,26 @@
   "name": "frota-ceara-ceramica",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test tests/etapa1.test.js tests/mvp.test.js",
+    "test": "node --test tests/etapa1.test.js tests/mvp.test.js tests/preparacao-neon.test.js",
     "migrar": "node scripts/migrar.js",
+    "migrar:esquema": "node scripts/migrar-esquema.js",
+    "migrar:neon": "node scripts/migrar-sqlite-neon.js",
     "backup": "node scripts/backup.js",
     "restaurar": "node scripts/restaurar.js",
     "seed:demo": "node scripts/seed-demo.js"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "bcrypt": "^6.0.0",
     "busboy": "^1.6.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.9"
   }
 }

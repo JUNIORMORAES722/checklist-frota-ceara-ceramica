@@ -34,7 +34,7 @@ function executarAteSair(env) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, ['server.js'], {
       cwd: RAIZ,
-      env: { ...process.env, CORS_ORIGENS: '', ...env },
+      env: { ...process.env, CORS_ORIGENS: '', DATABASE_URL: '', ...env },
       stdio: ['ignore', 'pipe', 'pipe']
     });
     let saida = '';
@@ -73,7 +73,7 @@ test('npm start usa server.js e não publica o checklist sem login', { timeout: 
   abrirBanco(banco).close();
   const child = spawn('npm', ['start'], {
     cwd: RAIZ,
-    env: { ...process.env, PORT: String(porta), JWT_SECRET: SEGREDO, SQLITE_PATH: banco, FOTOS_PATH: path.join(pasta, 'fotos'), CORS_ORIGENS: '' },
+    env: { ...process.env, PORT: String(porta), JWT_SECRET: SEGREDO, SQLITE_PATH: banco, FOTOS_PATH: path.join(pasta, 'fotos'), CORS_ORIGENS: '', DATABASE_URL: '' },
     shell: true,
     stdio: ['ignore', 'pipe', 'pipe']
   });

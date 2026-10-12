@@ -53,7 +53,7 @@ async function esperar(url) {
 function subir(porta, banco, fotos) {
   const child = spawn(process.execPath, ['server.js'], {
     cwd: RAIZ,
-    env: { ...process.env, PORT: String(porta), JWT_SECRET: SEGREDO, SQLITE_PATH: banco, FOTOS_PATH: fotos, CORS_ORIGENS: '' },
+    env: { ...process.env, PORT: String(porta), JWT_SECRET: SEGREDO, SQLITE_PATH: banco, FOTOS_PATH: fotos, CORS_ORIGENS: '', DATABASE_URL: '' },
     stdio: ['ignore', 'pipe', 'pipe']
   });
   let saida = '';
@@ -298,6 +298,7 @@ test('o seed recusa o nome do banco operacional', async () => {
     env: {
       ...process.env,
       SQLITE_PATH: destino,
+      DATABASE_URL: '',
       SENHA_GESTOR: 'senha-gestor-teste',
       SENHA_MOTORISTA: 'senha-motorista-teste'
     },
