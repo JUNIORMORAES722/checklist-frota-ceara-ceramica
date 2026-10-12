@@ -140,7 +140,7 @@ async function abrirDetalhe(id) {
     const imagem = document.createElement('img');
     imagem.className = 'foto-registro';
     imagem.alt = 'Fotografia da inspeção';
-    const arquivo = await fetch('/checklists/' + encodeURIComponent(id) + '/foto', {
+    const arquivo = await fetch(urlApi('/checklists/' + encodeURIComponent(id) + '/foto'), {
       headers: { Authorization: 'Bearer ' + sessionStorage.getItem('tokenFrota') }
     });
     if (arquivo.ok) imagem.src = URL.createObjectURL(await arquivo.blob());
@@ -221,7 +221,7 @@ async function imprimirChecklist(id) {
   const resultado = await requisicao('/checklists/' + encodeURIComponent(id));
   let foto = '';
   if (resultado.dados.temFoto) {
-    const arquivo = await fetch('/checklists/' + encodeURIComponent(id) + '/foto', {
+    const arquivo = await fetch(urlApi('/checklists/' + encodeURIComponent(id) + '/foto'), {
       headers: { Authorization: 'Bearer ' + sessionStorage.getItem('tokenFrota') }
     });
     if (arquivo.ok) {

@@ -111,30 +111,58 @@ npm run restaurar -- --origem backups\NOME-DA-PASTA --banco data\restaurado.sqli
 
 No Agendador de Tarefas do Windows, crie uma tarefa diária cujo programa seja `node` e os argumentos `scripts/backup.js`, iniciando na pasta do projeto. O agendamento em si fica no sistema operacional.
 
-## Vercel e Neon
+## Hospedagem: Backend no Render e Frontend na Vercel
 
-O computador de desenvolvimento continua no SQLite quando `DATABASE_URL` está ausente. Não coloque essa variável no `.env` local se a operação ainda deve usar `data/frota.sqlite`. Na Vercel, `DATABASE_URL` é obrigatória: o sistema recusa subir só com SQLite, porque o disco da função não guarda os registros.
+A arquitetura recomendada separa o **backend (API Express)** no Render e o **frontend (HTML/CSS/JS estático)** na Vercel.
 
-O PostgreSQL usa as mesmas tabelas e os mesmos identificadores de texto. Ativo e quilometragem inconsistente continuam como inteiros `0` ou `1`. As datas continuam em texto. `usuario_id` não vira chave estrangeira, para não descartar inspeção antiga sem usuário. A fotografia de produção fica na coluna `foto_conteudo`, não em arquivo, porque a Vercel não tem disco persistente. No SQLite local, a fotografia continua em arquivo.
+### 1. Backend no Render (`Web Service`)
 
-As migrações não rodam na inicialização e não apagam dados. Ainda não há banco Neon ligado por este repositório. Nada abaixo deve ser executado contra produção sem autorização.
+1. Crie uma conta no [Render](https://render.com) e conecte seu repositório GitHub.
+2. Crie um novo **Web Service**:
+   - **Runtime**: `Node`
+   - **Build Command**: `npm ci`
+   - **Start Command**: `npm start`
+   - **Health Check Path**: `/health`
+   *(Ou utilize o arquivo `render.yaml` via Blueprint do Render para preenchimento automático)*
+3. Em **Environment Variables**, cadastre:
+   - `JWT_SECRET`: gere uma chave segura com pelo menos 32 caracteres (ex.: no terminal, `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`).
+   - `DATABASE_URL`: URL pooled do Neon PostgreSQL (ex.: `postgresql://usuario:senha@ep-xyz-pooler.us-east-2.aws.neon.tech/frota?sslmode=require`).
+   - `CORS_ORIGENS`: liste os domínios do seu frontend na Vercel separados por vírgula (ex.: `https://frota-ceara.vercel.app,*.vercel.app`).
+4. Execute as migrações no banco Neon:
+   - Defina `DATABASE_URL` localmente e rode: `npm run migrar:esquema`.
+5. Anote a URL gerada pelo Render (exemplo: `https://frota-ceara-backend.onrender.com`).
 
-1. Crie ou escolha um projeto PostgreSQL no Neon. Não é preciso colar a URL neste chat.
-2. No painel do Neon, abra Connect e copie a connection string **pooled**, a indicada para aplicações serverless. O host costuma conter `-pooler`.
-3. Na Vercel, importe o repositório GitHub `JUNIORMORAES722/checklist-frota-ceara-ceramica`. O arquivo de entrada é `server.js`, que exporta o Express sem chamar `listen` dentro da função. A pasta `public/` é o site estático.
-4. Em Settings, Environment Variables, cadastre `DATABASE_URL` e `JWT_SECRET` separados para Preview e Production. Gere um segredo novo em cada ambiente, com pelo menos 32 caracteres, diferente do exemplo e do segredo local. Não reutilize o `.env` desta máquina.
-5. Faça primeiro um deploy de Preview, ainda sem dados reais.
-6. No ambiente em que o esquema deve nascer, execute `npm run migrar:esquema` com `DATABASE_URL` definido só naquele ambiente. O comando cria tabelas ausentes e registra a versão. Não crie usuários fictícios em produção.
-7. Confira login, checklist, veículo, pendência e uma nova implantação. Os registros precisam continuar depois do restart. Só então autorize a cópia dos dados reais.
+> **Nota:** No plano gratuito do Render, o serviço hiberna após 15 minutos de inatividade e leva cerca de 50 segundos para despertar na primeira requisição.
 
-A cópia dos dados reais fica em `npm run migrar:neon -- --origem CAMINHO-DA-COPIA --fotos CAMINHO-DAS-FOTOS`. O script não abre `data/frota.sqlite`. Ele exige uma cópia, compara as contagens e não grava se o destino já tiver dados inesperados. Uma nova tentativa, sem duplicar o que já entrou, usa `--retomar`. O relatório precisa mostrar os mesmos totais na origem e no destino. A conferência conhecida desta base é 3 usuários, 6 veículos, 10 checklists e 8 pendências; esses números não são inseridos pelo script. Se `confereComReferencia` vier falso, pare e revise antes de usar esse banco.
+---
 
-O backup do Neon fica no próprio Neon. `npm run backup` continua sendo o backup do SQLite local.
+### 2. Frontend na Vercel
+
+1. No painel da [Vercel](https://vercel.com), importe o mesmo repositório GitHub.
+2. O arquivo `vercel.json` na raiz já está configurado para publicar o diretório `public`.
+   - Se preferir configurar manualmente no painel da Vercel: defina **Root Directory** como `public` ou deixe na raiz com `outputDirectory: public`.
+3. Configure a URL da API para o frontend:
+   - **Opção A (Recomendada no código):** No arquivo `public/js/config.js`, defina:
+     ```javascript
+     window.__API_URL__ = 'https://frota-ceara-backend.onrender.com';
+     ```
+   - **Opção B (Dinâmica no navegador):** Na tela de login, clique no link **Conexão do servidor** e informe a URL do Render. Ela ficará salva no navegador via `localStorage`.
+
+---
+
+## Banco de Dados (Neon PostgreSQL)
+
+O PostgreSQL usa as mesmas tabelas e identificadores de texto do SQLite para preservar integridade. As fotos em produção ficam gravadas como binário (`BYTEA`) na coluna `foto_conteudo` do banco, dispensando disco persistente no servidor.
+
+1. No Neon, copie a connection string pooled (`-pooler`).
+2. Rode `npm run migrar:esquema` com `DATABASE_URL` configurada para criar as tabelas.
+3. Se desejar migrar dados de uma cópia SQLite existente:
+   ```powershell
+   npm run migrar:neon -- --origem CAMINHO-DA-COPIA --fotos CAMINHO-DAS-FOTOS
+   ```
 
 ## Limitações
 
-- O processo Node não termina TLS. Fora da máquina local, o acesso depende do proxy descrito acima.
-- Resolver uma pendência não altera o resultado histórico do checklist, e um checklist posterior conforme não encerra a ocorrência anterior.
-- Registros antigos sem arquivo de imagem continuam sem fotografia.
-- Quilometragens anteriores que diminuem são mantidas e marcadas para análise.
-- O backup agendado depende do Agendador de Tarefas do Windows.
+- O processo Node não termina TLS por conta própria; HTTPS é fornecido pelo proxy do Render e da Vercel.
+- No plano gratuito do Render, o serviço entra em suspensão quando ocioso.
+- Resolver uma pendência não altera o resultado histórico do checklist.

@@ -1,3 +1,10 @@
+function urlApi(caminho) {
+  const base = typeof obterApiUrl === 'function' ? obterApiUrl() : '';
+  if (!base) return caminho;
+  const path = caminho.startsWith('/') ? caminho : '/' + caminho;
+  return base + path;
+}
+
 async function requisicao(caminho, opcoes = {}) {
   const headers = new Headers(opcoes.headers || {});
   const token = sessionStorage.getItem('tokenFrota');
@@ -7,7 +14,19 @@ async function requisicao(caminho, opcoes = {}) {
     headers.set('Content-Type', 'application/json');
     body = JSON.stringify(opcoes.json);
   }
-  const resposta = await fetch(caminho, { method: opcoes.method || 'GET', headers, body });
+  let resposta;
+  try {
+    resposta = await fetch(urlApi(caminho), { method: opcoes.method || 'GET', headers, body });
+  } catch (erroRede) {
+    const base = typeof obterApiUrl === 'function' ? obterApiUrl() : '';
+    const msg = base
+      ? `Não foi possível conectar ao backend (${base}). Se o servidor estiver no Render gratuito, aguarde cerca de 50 segundos para despertar.`
+      : 'Não foi possível conectar ao servidor. Verifique a conexão ou a URL do backend.';
+    const erro = new Error(msg);
+    erro.status = 0;
+    erro.causaOriginal = erroRede;
+    throw erro;
+  }
   const texto = await resposta.text();
   let dados = null;
   try { dados = texto ? JSON.parse(texto) : null; } catch { dados = { erro: texto }; }

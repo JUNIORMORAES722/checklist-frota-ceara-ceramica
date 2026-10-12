@@ -64,10 +64,36 @@ function origensCors() {
     `http://[::1]:${porta}`
   ]);
   for (const origem of String(process.env.CORS_ORIGENS || '').split(',')) {
-    const texto = origem.trim();
+    const texto = origem.trim().replace(/\/+$/, '');
     if (texto) lista.add(texto);
   }
   return lista;
+}
+
+function origemPermitida(origin, origens) {
+  if (!origin) return true;
+  const normalizado = origin.replace(/\/+$/, '');
+  if (origens.has('*') || origens.has(normalizado)) return true;
+  for (const permitida of origens) {
+    if (permitida.startsWith('*.')) {
+      const sufixo = permitida.slice(2);
+      try {
+        const url = new URL(normalizado);
+        if (url.hostname.endsWith('.' + sufixo) || url.hostname === sufixo) return true;
+      } catch {
+        if (normalizado.endsWith(sufixo)) return true;
+      }
+    } else if (permitida.startsWith('https://*.') || permitida.startsWith('http://*.')) {
+      const semProtocolo = permitida.replace(/^https?:\/\/\*\./, '');
+      try {
+        const url = new URL(normalizado);
+        if (url.hostname.endsWith('.' + semProtocolo) || url.hostname === semProtocolo) return true;
+      } catch {
+        if (normalizado.endsWith(semProtocolo)) return true;
+      }
+    }
+  }
+  return false;
 }
 
 function responderErro(res, erro) {
@@ -97,7 +123,7 @@ function criarAplicacao(db) {
   });
   app.use(cors({
     origin(origin, callback) {
-      if (!origin || origens.has(origin)) return callback(null, true);
+      if (origemPermitida(origin, origens)) return callback(null, true);
       return callback(null, false);
     },
     credentials: true,
@@ -105,6 +131,14 @@ function criarAplicacao(db) {
   }));
   app.use(express.json({ limit: '1mb' }));
   app.use(express.static(path.join(RAIZ, 'public')));
+
+  app.get('/health', (req, res) => {
+    res.json({
+      status: 'ok',
+      banco: modoBanco() === 'postgres' ? 'postgres' : 'sqlite',
+      horario: new Date().toISOString()
+    });
+  });
 
   function verificarToken(req, res, next) {
     const tokenHeader = req.headers.authorization;

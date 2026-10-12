@@ -52,3 +52,19 @@ form.addEventListener('submit', async (evento) => {
     enviando = false;
   }
 });
+
+const btnServidor = document.getElementById('btnServidor');
+if (btnServidor) {
+  btnServidor.addEventListener('click', () => {
+    const atual = (typeof obterApiUrl === 'function' ? obterApiUrl() : '') || '';
+    const nova = window.prompt(
+      'URL do backend (Render):\nExemplo: https://frota-ceara-backend.onrender.com\n\nDeixe em branco para usar a mesma origem (local/proxy):',
+      atual
+    );
+    if (nova !== null) {
+      if (typeof definirApiUrl === 'function') definirApiUrl(nova.trim());
+      const configurada = (typeof obterApiUrl === 'function' ? obterApiUrl() : '') || 'mesma origem';
+      alert('Servidor configurado para: ' + configurada);
+    }
+  });
+}

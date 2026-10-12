@@ -238,3 +238,24 @@ th { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
   td::before { content: attr(data-label); font-weight: 700; color: var(--tinta-suave); }
   .item { align-items: flex-start; flex-direction: column; }
 }
+
+.linha-servidor {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.link-servidor {
+  background: none;
+  border: none;
+  color: var(--tinta-suave);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.link-servidor:hover {
+  color: var(--tinta);
+  background: var(--fundo-destaque);
+}

@@ -2,7 +2,7 @@
   "name": "frota-ceara-ceramica",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test tests/etapa1.test.js tests/mvp.test.js tests/preparacao-neon.test.js",
+    "test": "node --test tests/etapa1.test.js tests/mvp.test.js tests/preparacao-neon.test.js tests/render-vercel.test.js",
     "migrar": "node scripts/migrar.js",
     "migrar:esquema": "node scripts/migrar-esquema.js",
     "migrar:neon": "node scripts/migrar-sqlite-neon.js",
