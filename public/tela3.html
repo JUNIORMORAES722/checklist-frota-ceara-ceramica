@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestão — Frota Ceará Cerâmica</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="marca">
+      <div class="monograma" aria-hidden="true">CC</div>
+      <div>
+        <strong>Frota Ceará Cerâmica</strong>
+        <span>Painel do gestor</span>
+      </div>
+    </div>
+    <div>
+      <span class="usuario-logado" id="nomeUsuario"></span>
+      <button type="button" class="botao-fantasma" id="btnSair">Sair</button>
+    </div>
+  </header>
+  <main class="pagina">
+    <p id="aviso" class="aviso oculto" role="alert"></p>
+    <section class="grade grade-indicadores" aria-label="Indicadores do período">
+      <article class="indicador painel"><span>Checklists no período</span><strong id="indTotal">0</strong></article>
+      <article class="indicador painel ok"><span>Inspeções conformes</span><strong id="indOk">0</strong></article>
+      <article class="indicador painel pendente"><span>Inspeções com pendência</span><strong id="indPendencia">0</strong></article>
+      <article class="indicador painel"><span>Veículos com pendência aberta</span><strong id="indVeiculos">0</strong></article>
+    </section>
+
+    <section class="secao painel">
+      <h2>Histórico</h2>
+      <form id="filtros" class="filtros">
+        <label class="campo"><span>De</span><input type="date" id="dataInicio"></label>
+        <label class="campo"><span>Até</span><input type="date" id="dataFim"></label>
+        <label class="campo"><span>Placa</span><input id="filtroPlaca" placeholder="Placa"></label>
+        <label class="campo"><span>Motorista</span><input id="filtroMotorista" placeholder="Nome"></label>
+        <label class="campo"><span>Status</span>
+          <select id="filtroStatus">
+            <option value="">Todos</option>
+            <option value="OK">Conforme</option>
+            <option value="PENDENTE">Com pendência</option>
+          </select>
+        </label>
+        <div class="acoes">
+          <button class="botao" type="submit">Filtrar</button>
+          <button class="botao-secundario" type="button" id="btnLimpar">Limpar</button>
+          <button class="botao-secundario" type="button" id="btnExportar">Exportar CSV</button>
+        </div>
+      </form>
+      <div class="tabela-wrap">
+        <table>
+          <thead>
+            <tr><th>Data</th><th>Placa</th><th>Motorista</th><th>Km</th><th>Status</th><th>Ações</th></tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <div class="paginacao">
+        <button type="button" class="botao-secundario" id="paginaAnterior">Anterior</button>
+        <span id="paginaInfo"></span>
+        <button type="button" class="botao-secundario" id="paginaProxima">Próxima</button>
+      </div>
+    </section>
+
+    <section class="secao painel">
+      <h2>Veículos</h2>
+      <form id="formVeiculo" class="duas">
+        <label class="campo"><span>Placa</span><input id="novaPlaca" required placeholder="ABC1D23"></label>
+        <label class="campo"><span>Identificação</span><input id="novaDescricao" required placeholder="Caminhão basculante"></label>
+        <button class="botao" type="submit">Cadastrar veículo</button>
+      </form>
+      <div id="listaVeiculos"></div>
+    </section>
+  </main>
+
+  <div class="dialogo" id="dialogoDetalhe">
+    <div class="dialogo-caixa" role="dialog" aria-modal="true" aria-labelledby="tituloDetalhe">
+      <h2 id="tituloDetalhe">Checklist</h2>
+      <div id="corpoDetalhe"></div>
+      <div class="acoes">
+        <button type="button" class="botao" id="btnImprimir">Imprimir</button>
+        <button type="button" class="botao-secundario" id="fecharDetalhe">Fechar</button>
+      </div>
+    </div>
+  </div>
+  <div class="dialogo" id="dialogoConfirma">
+    <div class="dialogo-caixa" role="dialog" aria-modal="true">
+      <h2>Excluir checklist</h2>
+      <p id="textoConfirma">Esta exclusão não pode ser desfeita.</p>
+      <div class="acoes">
+        <button type="button" class="botao-perigo" id="confirmarExclusao">Excluir</button>
+        <button type="button" class="botao-secundario" id="cancelarExclusao">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/comum.js"></script>
+  <script src="js/impressao.js"></script>
+  <script src="js/app_gestor.js"></script>
+</body>
+</html>

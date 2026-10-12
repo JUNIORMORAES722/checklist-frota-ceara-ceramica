@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frota Ceará Cerâmica</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="login-pagina">
+  <main class="login-cartao">
+    <div class="marca">
+      <div class="monograma" aria-hidden="true">CC</div>
+      <div>
+        <strong>Ceará Cerâmica</strong>
+        <span>Operação de frota</span>
+      </div>
+    </div>
+    <h1>Frota Ceará Cerâmica</h1>
+    <p class="subtitulo">Gestão de Frota e Inspeções</p>
+    <p id="aviso" class="aviso oculto" role="alert"></p>
+    <form id="formLogin">
+      <label class="campo">
+        <span>Usuário</span>
+        <input id="usuario" name="usuario" autocomplete="username" required>
+      </label>
+      <div class="campo">
+        <label class="campo-rotulo" for="senha">Senha</label>
+        <div class="senha-linha">
+          <input id="senha" name="senha" type="password" autocomplete="current-password" required>
+          <button type="button" class="botao-secundario" id="mostrarSenha" aria-pressed="false">Mostrar</button>
+        </div>
+      </div>
+      <div class="bloco-botoes">
+        <button class="botao" type="submit" data-perfil="motorista" id="btnMotorista">Entrar como motorista</button>
+        <button class="botao-secundario" type="submit" data-perfil="gestor" id="btnGestor">Entrar como gestor</button>
+      </div>
+    </form>
+  </main>
+  <script src="js/comum.js"></script>
+  <script src="js/app_login.js"></script>
+</body>
+</html>

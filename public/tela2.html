@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inspeção — Frota Ceará Cerâmica</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="marca">
+      <div class="monograma" aria-hidden="true">CC</div>
+      <div>
+        <strong>Frota Ceará Cerâmica</strong>
+        <span>Inspeção de veículo</span>
+      </div>
+    </div>
+    <div>
+      <span class="usuario-logado" id="nomeUsuario"></span>
+      <button type="button" class="botao-fantasma" id="btnSair">Sair</button>
+    </div>
+  </header>
+  <main class="pagina">
+    <p id="aviso" class="aviso oculto" role="alert"></p>
+    <p id="sucesso" class="sucesso oculto" role="status"></p>
+    <form id="formChecklist">
+      <section class="secao painel">
+        <h2>Identificação da inspeção</h2>
+        <div class="duas">
+          <label class="campo"><span>Data</span><input type="date" id="data" required></label>
+          <label class="campo"><span>Hora</span><input type="time" id="hora" required></label>
+        </div>
+        <label class="campo">
+          <span>Veículo</span>
+          <select id="veiculo" required><option value="">Selecione o veículo</option></select>
+        </label>
+        <label class="campo"><span>Motorista</span><input id="motorista" readonly></label>
+        <label class="campo"><span>Quilometragem atual</span><input id="km" inputmode="numeric" required></label>
+      </section>
+
+      <section class="secao painel">
+        <h2>Documentação e segurança</h2>
+        <div class="grupo-itens">
+          <div class="item"><span>CRLV em dia</span><div class="escolha"><label class="opcao"><input type="radio" name="crlv" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="crlv" value="NÃO OK"><span>Não OK</span></label></div></div>
+          <div class="item"><span>Triângulo, Macaco e Estepe</span><div class="escolha"><label class="opcao"><input type="radio" name="triangulo" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="triangulo" value="NÃO OK"><span>Não OK</span></label></div></div>
+        </div>
+      </section>
+
+      <section class="secao painel">
+        <h2>Mecânica e exterior</h2>
+        <div class="grupo-itens">
+          <div class="item"><span>Pneus e Calibragem</span><div class="escolha"><label class="opcao"><input type="radio" name="pneus" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="pneus" value="NÃO OK"><span>Não OK</span></label></div></div>
+          <div class="item"><span>Faróis e Lanternas</span><div class="escolha"><label class="opcao"><input type="radio" name="farois" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="farois" value="NÃO OK"><span>Não OK</span></label></div></div>
+          <div class="item"><span>Freios</span><div class="escolha"><label class="opcao"><input type="radio" name="freios" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="freios" value="NÃO OK"><span>Não OK</span></label></div></div>
+        </div>
+      </section>
+
+      <section class="secao painel">
+        <h2>Cabine e operação</h2>
+        <div class="grupo-itens">
+          <div class="item"><span>Buzina e Vidros</span><div class="escolha"><label class="opcao"><input type="radio" name="buzina" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="buzina" value="NÃO OK"><span>Não OK</span></label></div></div>
+          <div class="item"><span>Cintos de Segurança</span><div class="escolha"><label class="opcao"><input type="radio" name="cintos" value="OK" required><span>OK</span></label><label class="opcao"><input type="radio" name="cintos" value="NÃO OK"><span>Não OK</span></label></div></div>
+        </div>
+        <label class="campo">
+          <span>Combustível</span>
+          <select id="combustivel" required>
+            <option value="">Selecione</option>
+            <option value="reserva">Reserva</option>
+            <option value="1/4">1/4</option>
+            <option value="1/2">1/2</option>
+            <option value="3/4">3/4</option>
+            <option value="cheio">Cheio</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="secao painel">
+        <h2>Observações e evidências</h2>
+        <label class="campo"><span>Observações</span><textarea id="obs" maxlength="2000"></textarea></label>
+        <label class="campo"><span>Fotografia</span><input id="foto" type="file" accept="image/jpeg,image/png,image/webp"></label>
+        <p id="nomeFoto">Nenhuma fotografia selecionada.</p>
+        <img id="previa" class="foto-registro oculto" alt="Pré-visualização da fotografia">
+      </section>
+
+      <button class="botao" id="btnSalvar" type="submit">Salvar checklist</button>
+    </form>
+  </main>
+  <script src="js/comum.js"></script>
+  <script src="js/app_motorista.js"></script>
+</body>
+</html>
