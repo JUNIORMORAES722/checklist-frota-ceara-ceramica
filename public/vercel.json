@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/gestores/:match*",
+      "destination": "https://frota-ceara-backend.onrender.com/gestores/:match*"
+    },
+    {
+      "source": "/motoristas/:match*",
+      "destination": "https://frota-ceara-backend.onrender.com/motoristas/:match*"
+    },
+    {
+      "source": "/veiculos/:match*",
+      "destination": "https://frota-ceara-backend.onrender.com/veiculos/:match*"
+    },
+    {
+      "source": "/checklists/:match*",
+      "destination": "https://frota-ceara-backend.onrender.com/checklists/:match*"
+    },
+    {
+      "source": "/pendencias/:match*",
+      "destination": "https://frota-ceara-backend.onrender.com/pendencias/:match*"
+    },
+    {
+      "source": "/eu",
+      "destination": "https://frota-ceara-backend.onrender.com/eu"
+    },
+    {
+      "source": "/health",
+      "destination": "https://frota-ceara-backend.onrender.com/health"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

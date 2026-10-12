@@ -1,45 +1,44 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "outputDirectory": "public",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/gestores/:match*",
-      "destination": "https://frota-ceara-backend.onrender.com/gestores/:match*"
-    },
-    {
-      "source": "/motoristas/:match*",
-      "destination": "https://frota-ceara-backend.onrender.com/motoristas/:match*"
-    },
-    {
-      "source": "/veiculos/:match*",
-      "destination": "https://frota-ceara-backend.onrender.com/veiculos/:match*"
-    },
-    {
-      "source": "/checklists/:match*",
-      "destination": "https://frota-ceara-backend.onrender.com/checklists/:match*"
-    },
-    {
-      "source": "/pendencias/:match*",
-      "destination": "https://frota-ceara-backend.onrender.com/pendencias/:match*"
-    },
-    {
-      "source": "/eu",
-      "destination": "https://frota-ceara-backend.onrender.com/eu"
-    },
-    {
-      "source": "/health",
-      "destination": "https://frota-ceara-backend.onrender.com/health"
+      "src": "public/**",
+      "use": "@vercel/static"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
-      ]
+      "src": "/gestores/(.*)",
+      "dest": "https://frota-ceara-backend.onrender.com/gestores/$1"
+    },
+    {
+      "src": "/motoristas/(.*)",
+      "dest": "https://frota-ceara-backend.onrender.com/motoristas/$1"
+    },
+    {
+      "src": "/veiculos/(.*)",
+      "dest": "https://frota-ceara-backend.onrender.com/veiculos/$1"
+    },
+    {
+      "src": "/checklists/(.*)",
+      "dest": "https://frota-ceara-backend.onrender.com/checklists/$1"
+    },
+    {
+      "src": "/pendencias/(.*)",
+      "dest": "https://frota-ceara-backend.onrender.com/pendencias/$1"
+    },
+    {
+      "src": "/eu",
+      "dest": "https://frota-ceara-backend.onrender.com/eu"
+    },
+    {
+      "src": "/health",
+      "dest": "https://frota-ceara-backend.onrender.com/health"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ]
 }

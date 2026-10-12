@@ -1,0 +1,8 @@
+tree 001a548bb59f1b657eb4d723dadcb401ba0bd153
+parent dd31bbcfd3a7d68767d3d90a89f1d1d56b9632e2
+author JUNIORMORAES722 <junior-moraes@users.noreply.github.com> 1791818254 -0300
+committer JUNIORMORAES722 <junior-moraes@users.noreply.github.com> 1791818254 -0300
+
+chore: proteger pastas locais de recuperação
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
